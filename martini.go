@@ -83,7 +83,7 @@ func (m *Martini) RunOnAddr(addr string) {
 
 	logger := m.Injector.Get(reflect.TypeOf(m.logger)).Interface().(*log.Logger)
 	logger.Printf("listening on %s (%s)\n", addr, Env)
-	logger.Fatalln(http.ListenAndServeTLS(addr,m))
+	logger.Fatalln(http.ListenAndServe(addr,m))
 }
 
 // Run the https server on a given host and port.
