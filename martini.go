@@ -83,9 +83,30 @@ func (m *Martini) RunOnAddr(addr string) {
 
 	logger := m.Injector.Get(reflect.TypeOf(m.logger)).Interface().(*log.Logger)
 	logger.Printf("listening on %s (%s)\n", addr, Env)
-	logger.Fatalln(http.ListenAndServe(addr, m))
+	logger.Fatalln(http.ListenAndServeTLS(addr,m))
 }
 
+// Run the https server on a given host and port.
+func (m *Martini) RunOnAddrHttps(addr,cert,key string) {
+	// TODO: Should probably be implemented using a new instance of http.Server in place of
+	// calling http.ListenAndServer directly, so that it could be stored in the martini struct for later use.
+	// This would also allow to improve testing when a custom host and port are passed.
+
+	logger := m.Injector.Get(reflect.TypeOf(m.logger)).Interface().(*log.Logger)
+	logger.Printf("listening on %s (%s)\n", addr, Env)
+	logger.Fatalln(http.ListenAndServeTLS(addr,cert, key,m))
+}
+// Run the https server. Listening on os.GetEnv("PORT") or 3000 by default.
+func (m *Martini) RunHttps(cert,key string) {
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "3000"
+	}
+
+	host := os.Getenv("HOST")
+
+	m.RunOnAddr(host + ":" + port,cert,key)
+}
 // Run the http server. Listening on os.GetEnv("PORT") or 3000 by default.
 func (m *Martini) Run() {
 	port := os.Getenv("PORT")
