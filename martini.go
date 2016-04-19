@@ -105,7 +105,7 @@ func (m *Martini) RunHttps(cert,key string) {
 
 	host := os.Getenv("HOST")
 
-	m.RunOnAddr(host + ":" + port,cert,key)
+	m.RunOnAddrHttps(host + ":" + port,cert,key)
 }
 // Run the http server. Listening on os.GetEnv("PORT") or 3000 by default.
 func (m *Martini) Run() {
