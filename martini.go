@@ -83,16 +83,8 @@ func (m *Martini) RunOnAddr(addr string) {
 
 	logger := m.Injector.Get(reflect.TypeOf(m.logger)).Interface().(*log.Logger)
 	logger.Printf("listening on %s (%s)\n", addr, Env)
-	s := &http.Server{
-		Addr:           addr,
-		Handler:        m,
-		ReadTimeout:    100 * time.Second,
-		WriteTimeout:   100 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-	logger.Fatalln(s.ListenAndServe())
+	logger.Fatalln(http.ListenAndServe(addr,m))
 }
-
 
 // Run the https server on a given host and port.
 func (m *Martini) RunOnAddrHttps(addr,cert,key string) {
@@ -102,16 +94,8 @@ func (m *Martini) RunOnAddrHttps(addr,cert,key string) {
 
 	logger := m.Injector.Get(reflect.TypeOf(m.logger)).Interface().(*log.Logger)
 	logger.Printf("listening on %s (%s)\n", addr, Env)
-	s := &http.Server{
-		Addr:           addr,
-		Handler:        m,
-		ReadTimeout:    100 * time.Second,
-		WriteTimeout:   100 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-	logger.Fatalln(s.ListenAndServeTLS(cert, key))
+	logger.Fatalln(http.ListenAndServeTLS(addr,cert, key,m))
 }
-
 // Run the https server. Listening on os.GetEnv("PORT") or 3000 by default.
 func (m *Martini) RunHttps(cert,key string) {
 	port := os.Getenv("PORT")
