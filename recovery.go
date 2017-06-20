@@ -116,7 +116,7 @@ func Recovery() Handler {
 	return func(c Context, log *log.Logger) {
 		defer func() {
 			if err := recover(); err != nil {
-				stack := stack(3)
+				stack := stack(1)
 				log.Printf("PANIC: %s\n%s", err, stack)
 
 				// Lookup the current responsewriter
