@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"runtime"
 
+	"time"
+
 	"github.com/codegangsta/inject"
 )
 
@@ -114,7 +116,10 @@ func function(pc uintptr) []byte {
 // While Martini is in development mode, Recovery will also output the panic as HTML.
 func Recovery() Handler {
 	return func(c Context, log *log.Logger) {
+		start := time.Now()
+
 		defer func() {
+
 			if err := recover(); err != nil {
 				stack := stack(1)
 				log.Printf("PANIC: %s\n%s", err, stack)
@@ -138,6 +143,7 @@ func Recovery() Handler {
 				}
 			}
 		}()
+		log.Printf("martini-中间件-recovery-1 %s\n", time.Since(start).String())
 
 		c.Next()
 	}

@@ -131,5 +131,6 @@ func Static(directory string, staticOpt ...StaticOptions) Handler {
 		}
 
 		http.ServeContent(res, req, file, fi.ModTime(), f)
+
 	}
 }
